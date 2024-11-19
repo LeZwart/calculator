@@ -17,10 +17,10 @@ fn main() {
         let input2: String = readline("Second value: ");
 
         if input1.parse::<f32>().is_ok() && input2.parse::<f32>().is_ok() {
-            let value: f32 = input1.parse().expect("Failed to parse input1");
+            let value1: f32 = input1.parse().expect("Failed to parse input1");
             let value2: f32 = input2.parse().expect("Failed to parse input2");
 
-            let result: f32 = value + value2;
+            let result: f32 = value1 + value2;
 
             println!("Result is: {}", result);
 
