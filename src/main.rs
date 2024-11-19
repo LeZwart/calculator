@@ -17,15 +17,15 @@ fn main() {
         let input2: String = readline("Second value: ");
 
         if input1.parse::<f32>().is_ok() && input2.parse::<f32>().is_ok() {
-            let value: f32 = input1.parse().unwrap();
-            let value2: f32 = input2.parse().unwrap();
+            let value: f32 = input1.parse().expect("Failed to parse input1");
+            let value2: f32 = input2.parse().expect("Failed to parse input2");
 
             let result: f32 = value + value2;
 
-            println!("Result is: {}", result)
+            println!("Result is: {}", result);
 
         } else {
-            println!("Invalid characters in use!")
+            println!("Invalid characters in use!");
         }
 
     }
