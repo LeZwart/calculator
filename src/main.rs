@@ -28,14 +28,46 @@ fn has_invalid_character(equation_parts: &Vec<&str>) -> bool {
     return false;
 }
 
+// TODO: Implement order of operations
+fn calculate_equation(parts: &Vec<&str>) -> f32 {
+
+    // ["25", "+", "2", "+", "7", "-", "2"]
+    // Initialize the result with the first number
+    let mut result: f32 = parts[0].parse().unwrap();
+
+    for i in 1..parts.len() {
+        let part = parts[i];
+
+        // Is current part is an operator
+        if is_operator(part.chars().next().unwrap()) {    
+            let operator = part.chars().next().unwrap();
+
+            // Parse the next part as a number (operand)
+            let operand = parts[i + 1].parse::<f32>().unwrap();
+
+            // Perform the operation based on the operator
+            match operator {
+                '+' => result += operand,
+                '-' => result -= operand,
+                '*' => result *= operand,
+                '/' => result /= operand,
+                _ => (),
+            }
+        }
+    }
+
+    return result;
+}
+
 fn main() {
+    let re = Regex::new(r"-?\d+(\.\d+)?|[+\-*/]").unwrap();
+
     loop {
         let input: String = readline("Calculate:");
         if input.is_empty() {
             return;
         }
         
-        let re = Regex::new(r"(\d+|\D)").unwrap();
         let parts: Vec<&str> = re.find_iter(&input).map(|m| m.as_str()).collect();
         
         // Borrow 'parts' to check if the equation contains invalid characters
@@ -44,36 +76,8 @@ fn main() {
             continue;
         }
 
-        // println!("{:?}", parts);
-        
-        // ["25", "+", "2", "+", "7", "-", "2"]
-        // Initialize the result with the first number
-        let mut result: f32 = parts[0].parse().unwrap();
-
-        for i in 1..parts.len() {
-            let part = parts[i];
-
-            // Is current part is an operator
-            if is_operator(part.chars().next().unwrap()) {    
-                let operator = part.chars().next().unwrap();
-
-                // Parse the next part as a number (operand)
-                let operand = parts[i + 1].parse::<f32>().unwrap();
-
-                // Perform the operation based on the operator
-                match operator {
-                    '+' => result += operand,
-                    '-' => result -= operand,
-                    '*' => result *= operand,
-                    '/' => result /= operand,
-                    _ => (),
-                }
-            }
-        }
-
+        let result = calculate_equation(&parts);
         println!("{}", result);
-        
-
     }
 
 }
