@@ -33,6 +33,27 @@ fn has_invalid_character(equation_parts: &Vec<&str>) -> bool {
     return false;
 }
 
+// Check if the array is a calculatable equation by counting operators and operands
+fn is_valid_equation(equation_parts: &Vec<&str>) -> bool {
+    let mut operator_count = 0;
+    let mut operand_count = 0;
+
+    for part in equation_parts {
+        if part.parse::<f32>().is_ok() {
+            operand_count += 1;
+        } else if is_operator(part.chars().next().unwrap()) {
+            operator_count += 1;
+        }
+    }
+
+    // If there are more operators than operands, the equation is invalid
+    if operator_count >= operand_count {
+        return false;
+    }
+
+    return true;
+}
+
 /*  Calculate the equation
     First we handle multiplication and division
     Then we handle addition and subtraction
@@ -101,10 +122,12 @@ fn main() {
         let parts: Vec<&str> = re.find_iter(&input).map(|m| m.as_str()).collect();
         
         // Borrow 'parts' to check if equation contains invalid characters
-        if has_invalid_character(&parts) {
-            println!("Invalid characters in equation");
+        if has_invalid_character(&parts) || !is_valid_equation(&parts) {
+            println!("Invalid equation");
             continue;
         }
+
+        
 
         let result = calculate_equation(&parts);
         println!("{}", result);
@@ -156,6 +179,12 @@ mod tests {
     fn test_valid_character() {
         let parts = vec!["2", "+", "3"];
         assert!(!has_invalid_character(&parts));
+    }
+
+    #[test]
+    fn is_invalid_equation() {
+        let parts = vec!["2", "+"];
+        assert!(!is_valid_equation(&parts));
     }
 }
 
